@@ -4,7 +4,8 @@ from nltk.corpus import wordnet as wn
 from scipy.spatial.distance import cosine
 from operator import itemgetter
 import pyinflect
-
+import psutil
+from resource import getrusage, RUSAGE_SELF
 
 app = Flask(__name__)
 
@@ -14,7 +15,6 @@ def paradigmatic():
 
 @app.route('/paradigmatic_result', methods=['GET'])
 def paradigmatic_result():
-
     sp = spacy.load('en_core_web_sm')
     model = fasttext.load_model('models/cc.en.300.bin')
 
@@ -70,6 +70,8 @@ def paradigmatic_result():
         preprocessing='default'
 
     correct_answer_embedding = model.get_word_vector(correct_answer)
+    # print("This is correct answer embedding")
+    # print(correct_answer_embedding)
     # correct_answer_embedding = 0
     synsets = wn.synsets(correct_answer, pos=pos_code)
     number_of_synsets = len(synsets)
@@ -106,6 +108,9 @@ def paradigmatic_result():
             synsets_with_lemmas[i].append(l.name())
 
             embedding = model.get_word_vector(candidate)
+            # if candidate == 'acquisitions':
+            #     print("This is distractor acquisitions")
+            #     print(embedding)
             sim = cosine_similarity(correct_answer_embedding, embedding)
             # sim = 0
 
@@ -122,6 +127,7 @@ def paradigmatic_result():
     # TODO: remove duplicate candidate
 
     candidates = sorted(candidates, key=itemgetter(1))
+    print("Peak Memory:", int(getrusage(RUSAGE_SELF).ru_maxrss / 1024**2))
 
     return render_template('paradigmatic_result.html', 
     sentence=sentence, 
