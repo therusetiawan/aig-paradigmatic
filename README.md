@@ -7,7 +7,7 @@ This guide will help you set up the environment, prepare the necessary files, an
 * Python
 * PIP (Python Package Installer)
 * Python Dependencies: `flask spacy fasttext nltk scipy pyinflect`
-* FastText Model: [cc.en.300.bin(https://fasttext.cc/docs/en/crawl-vectors.html
+* FastText Model: [cc.en.300.bin](https://fasttext.cc/docs/en/crawl-vectors.html)
 
 ## How to Run
 * Place the fasttext model file inside the `models` directory. See `app.py` in line 19
